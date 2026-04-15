@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Pest Warning System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-body">
+    <nav class="navbar solid-nav">
+        <div class="brand">Pest Warning System</div>
+        <div class="nav-menu">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('history') }}">History</a>
+            <a href="{{ url_for('guidance') }}">Guidance</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="page-wrap">
+        <section class="hero-mini">
+            <h1>Pest Outbreak Early Warning Dashboard</h1>
+            <p>Welcome, {{ user_name }}. Enter crop details and view the risk score, analysis chart, and recommendations.</p>
+        </section>
+
+        <div class="main-grid">
+            <div class="card form-card">
+                <h2>Farmer Input Form</h2>
+                <form method="POST">
+                    <div class="grid-2">
+                        <div class="field">
+                            <label>Farmer Name</label>
+                            <input type="text" name="farmer_name" required>
+                        </div>
+                        <div class="field">
+                            <label>Location</label>
+                            <input type="text" name="location" required>
+                        </div>
+                        <div class="field">
+                            <label>Crop Name</label>
+                            <input type="text" name="crop" required>
+                        </div>
+                        <div class="field">
+                            <label>Temperature (°C)</label>
+                            <input type="number" step="0.1" name="temperature" required>
+                        </div>
+                        <div class="field">
+                            <label>Humidity (%)</label>
+                            <input type="number" step="0.1" name="humidity" required>
+                        </div>
+                        <div class="field">
+                            <label>Rainfall (mm)</label>
+                            <input type="number" step="0.1" name="rainfall" required>
+                        </div>
+                        <div class="field">
+                            <label>Pest Sightings Count</label>
+                            <input type="number" name="pest_sightings" required>
+                        </div>
+                        <div class="field">
+                            <label>Leaf Damage (%)</label>
+                            <input type="number" step="0.1" name="leaf_damage" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary full-btn">Analyze Pest Risk</button>
+                </form>
+            </div>
+
+            <div class="card side-card">
+                <h2>Quick Tips</h2>
+                <ul class="styled-list">
+                    <li>Inspect leaves after rain and high humidity.</li>
+                    <li>Remove infected leaves immediately.</li>
+                    <li>Keep water drainage proper.</li>
+                    <li>Use crop-safe pest control methods.</li>
+                    <li>Maintain records for future comparison.</li>
+                </ul>
+            </div>
+        </div>
+
+        {% if alert_status and not result %}
+        <div class="message error-message mt-20">{{ alert_status }}</div>
+        {% endif %}
+
+        {% if result %}
+        <div
+            id="chart-data"
+            data-score="{{ result.score }}"
+            data-temperature="{{ result.temperature }}"
+            data-humidity="{{ result.humidity }}"
+            data-rainfall="{{ result.rainfall }}"
+            data-pest-sightings="{{ result.pest_sightings }}"
+            data-leaf-damage="{{ result.leaf_damage }}">
+        </div>
+
+        <div class="result-grid">
+            <div class="card">
+                <h2>Risk Summary</h2>
+
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span>Farmer</span>
+                        <strong>{{ result.farmer_name }}</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Location</span>
+                        <strong>{{ result.location }}</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Crop</span>
+                        <strong>{{ result.crop }}</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Risk Score</span>
+                        <strong>{{ result.score }}/100</strong>
+                    </div>
+                </div>
+
+                <div class="risk-pill {% if result.risk_level == 'High' %}high{% elif result.risk_level == 'Medium' %}medium{% else %}low{% endif %}">
+                    {{ result.risk_level }} Risk
+                </div>
+
+                <p class="desc"><strong>Recommendation:</strong> {{ result.recommendation }}</p>
+
+                {% if alert_status %}
+                <div class="message success-message">{{ alert_status }}</div>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>Risk Chart</h2>
+                <div class="chart-box">
+                    <canvas id="riskChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <canvas id="factorChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-grid">
+            <div class="card">
+                <h2>Methods to Reduce Risk</h2>
+                <ul class="styled-list">
+                    {% for method in methods %}
+                    <li>{{ method }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Instructions for Farmer</h2>
+                <ul class="styled-list">
+                    {% for instruction in instructions %}
+                    <li>{{ instruction }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        const chartDataElement = document.getElementById("chart-data");
+
+        if (chartDataElement) {
+            const riskScore = Number(chartDataElement.dataset.score) || 0;
+            const safeScore = Math.max(0, 100 - riskScore);
+
+            const temperature = Number(chartDataElement.dataset.temperature) || 0;
+            const humidity = Number(chartDataElement.dataset.humidity) || 0;
+            const rainfall = Number(chartDataElement.dataset.rainfall) || 0;
+            const pestSightings = Number(chartDataElement.dataset.pestSightings) || 0;
+            const leafDamage = Number(chartDataElement.dataset.leafDamage) || 0;
+
+            const riskCanvas = document.getElementById("riskChart");
+            if (riskCanvas) {
+                new Chart(riskCanvas, {
+                    type: "doughnut",
+                    data: {
+                        labels: ["Risk Score", "Safe Range"],
+                        datasets: [{
+                            data: [riskScore, safeScore],
+                            backgroundColor: ["#ef4444", "#cbd5e1"],
+                            borderWidth: 1
+                        }]
+                    }
+                });
+            }
+
+            const factorCanvas = document.getElementById("factorChart");
+            if (factorCanvas) {
+                new Chart(factorCanvas, {
+                    type: "bar",
+                    data: {
+                        labels: ["Temperature", "Humidity", "Rainfall", "Sightings", "Leaf Damage"],
+                        datasets: [{
+                            label: "Field Inputs",
+                            data: [temperature, humidity, rainfall, pestSightings, leafDamage],
+                            backgroundColor: ["#2563eb", "#06b6d4", "#22c55e", "#f59e0b", "#ef4444"],
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

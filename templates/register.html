@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Pest Warning System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-body">
+    <div class="auth-card">
+        <div class="auth-left">
+            <h1>Create Account</h1>
+            <p>Register with your name, address, phone number, email, and your own password.</p>
+        </div>
+
+        <div class="auth-right">
+            <h2>Register</h2>
+
+            {% if error %}
+            <div class="message error-message">{{ error }}</div>
+            {% endif %}
+
+            {% if message %}
+            <div class="message success-message">{{ message }}</div>
+            {% endif %}
+
+            <form method="POST">
+                <label>Full Name</label>
+                <input type="text" name="name" required>
+
+                <label>Address</label>
+                <input type="text" name="address" required>
+
+                <label>Phone Number</label>
+                <input type="text" name="phone" required>
+
+                <label>Email</label>
+                <input type="email" name="email" required>
+
+                <label>Create Password</label>
+                <input type="password" name="password" required>
+
+                <label>Confirm Password</label>
+                <input type="password" name="confirm_password" required>
+
+                <button type="submit" class="btn btn-primary full-btn">Register</button>
+            </form>
+
+            <p class="auth-link-text">
+                Already have an account?
+                <a href="{{ url_for('login') }}">Login here</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

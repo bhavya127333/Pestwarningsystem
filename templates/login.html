@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Pest Warning System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-body">
+    <div class="auth-card">
+        <div class="auth-left">
+            <h1>Pest Warning System</h1>
+            <p>Login with your email and password. After that, enter the verification code to continue.</p>
+        </div>
+
+        <div class="auth-right">
+            <h2>Login</h2>
+
+            {% if error %}
+            <div class="message error-message">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST">
+                <label>Email</label>
+                <input type="email" name="email" required>
+
+                <label>Password</label>
+                <input type="password" name="password" required>
+
+                <button type="submit" class="btn btn-primary full-btn">Login</button>
+            </form>
+
+            <p class="auth-link-text">
+                New user?
+                <a href="{{ url_for('register') }}">Create account</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

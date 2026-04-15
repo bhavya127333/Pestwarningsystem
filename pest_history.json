@@ -1,0 +1,16 @@
+[
+    {
+        "date": "15-04-2026 16:37",
+        "farmer_name": "teja",
+        "location": "nirmal",
+        "crop": "wheat",
+        "temperature": 0.2,
+        "humidity": 0.8,
+        "rainfall": 0.3,
+        "pest_sightings": 0,
+        "leaf_damage": 0.6,
+        "risk_level": "Low",
+        "score": 0,
+        "recommendation": "Low risk. Continue regular crop care and observation."
+    }
+]

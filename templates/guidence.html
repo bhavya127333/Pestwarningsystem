@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guidance | Pest Warning System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dashboard-body">
+    <nav class="navbar solid-nav">
+        <div class="brand">Pest Warning System</div>
+        <div class="nav-menu">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('history') }}">History</a>
+            <a href="{{ url_for('guidance') }}">Guidance</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="page-wrap">
+        <section class="hero-mini">
+            <h1>Farmer Guidance</h1>
+            <p>Welcome, {{ user_name }}. Follow these crop care and safety practices.</p>
+        </section>
+
+        <div class="result-grid">
+            <div class="card">
+                <h2>Field Safety</h2>
+                <ul class="styled-list">
+                    <li>Inspect leaves, stems, and roots regularly.</li>
+                    <li>Remove infected crop parts quickly.</li>
+                    <li>Do not spray chemicals without guidance.</li>
+                    <li>Wear gloves, mask, and boots when spraying.</li>
+                    <li>Keep children away from treated areas.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Crop Care Tips</h2>
+                <ul class="styled-list">
+                    <li>Use balanced irrigation and avoid water stagnation.</li>
+                    <li>Maintain spacing between plants.</li>
+                    <li>Track humidity and rainfall after storms.</li>
+                    <li>Use light traps and sticky traps.</li>
+                    <li>Keep a simple record of pest signs weekly.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

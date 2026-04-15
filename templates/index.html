@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pest Warning System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="home-body">
+    <nav class="navbar">
+        <div class="brand dark-brand">Pest Warning System</div>
+        <div class="nav-menu dark-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('register') }}">Register</a>
+            <a href="{{ url_for('login') }}">Login</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Pest Outbreak Early Warning System</h1>
+            <p>
+                A smart crop monitoring solution using Flask, AWS SNS, EC2, and IAM
+                to estimate pest risk and provide early alerts to farmers.
+            </p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('register') }}" class="btn btn-primary">Create Account</a>
+                <a href="{{ url_for('login') }}" class="btn btn-secondary">Login</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Main Features</h2>
+        <div class="card-grid">
+            <div class="feature-card">
+                <h3>Multi User Access</h3>
+                <p>Each user can register with personal details and create a private password.</p>
+            </div>
+            <div class="feature-card">
+                <h3>OTP Verification</h3>
+                <p>Each login is protected with a verification code step, ready for AWS integration.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Risk Analysis</h3>
+                <p>Analyzes crop and environmental inputs to estimate pest outbreak level.</p>
+            </div>
+            <div class="feature-card">
+                <h3>History Tracking</h3>
+                <p>Each user can view their own previous pest records separately.</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
